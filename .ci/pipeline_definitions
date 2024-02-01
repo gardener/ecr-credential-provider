@@ -1,0 +1,32 @@
+ecr-credential-provider:
+  template: 'default'
+  base_definition:
+    repo:
+      disable_ci_skip: True
+    traits:
+      version: ~
+      component_descriptor:
+        ocm_repository: europe-docker.pkg.dev/gardener-project/snapshots
+  jobs:
+    release:
+      traits:
+        component_descriptor:
+          ocm_repository: europe-docker.pkg.dev/gardener-project/releases
+        version:
+          preprocess: 'finalize'
+          inject_effective_version: True
+        publish:
+          platforms:
+            - 'linux/amd64'
+            - 'linux/arm64'
+          oci-builder: 'docker-buildx'
+          dockerimages:
+            ecr-credential-provider:
+              image: 'europe-docker.pkg.dev/gardener-project/releases/gardener/extensions/ecr-credential-provider'
+              dockerfile: 'Dockerfile'
+              tag_as_latest: False
+        release:
+          nextversion: 'noop'
+          release_commit_publishing_policy: tag_and_merge_back
+          release_notes_policy: disabled
+          release_on_github: False
