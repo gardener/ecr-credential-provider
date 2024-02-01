@@ -7,6 +7,12 @@ ecr-credential-provider:
       version: ~
       component_descriptor:
         ocm_repository: europe-docker.pkg.dev/gardener-project/snapshots
+        component_labels:
+        - name: 'cloud.gardener.cnudie/responsibles'
+          value:
+          - type: 'githubTeam'
+            teamname: 'gardener/gardener-extension-provider-aws-maintainers'
+            github_hostname: 'github.com'
   jobs:
     release:
       traits:
