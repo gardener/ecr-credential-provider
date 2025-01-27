@@ -12,8 +12,7 @@ FROM builder-$TARGETARCH as builder
 ARG EFFECTIVE_VERSION
 WORKDIR /tmp/ecr-credential-provider
 
-RUN git clone https://github.com/kubernetes/cloud-provider-aws.git .
-RUN git checkout tags/$EFFECTIVE_VERSION
+RUN git clone https://github.com/kubernetes/cloud-provider-aws.git -b $EFFECTIVE_VERSION .
 
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" GOPROXY=$(GOPROXY) go build \
     		-trimpath \
