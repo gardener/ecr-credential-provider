@@ -1,21 +1,25 @@
 ### binary downloader
 # Arch specific stages are required to set arg appropriately, see https://github.com/docker/buildx/issues/157#issuecomment-538048500
 
-FROM alpine:3.19 AS builder-amd64
+FROM golang:1.23.5 AS builder-amd64
 ARG ARCH=amd64
 
-FROM alpine:3.19 AS builder-arm64
+FROM golang:1.23.5 AS builder-arm64
 ARG ARCH=arm64
 
 FROM builder-$TARGETARCH as builder
 
-WORKDIR /tmp/ecr-credential-provider
-COPY . .
-
 ARG EFFECTIVE_VERSION
+WORKDIR /tmp/ecr-credential-provider
 
-RUN wget -O ecr-credential-provider https://artifacts.k8s.io/binaries/cloud-provider-aws/$EFFECTIVE_VERSION/linux/$ARCH/ecr-credential-provider-linux-$ARCH && \
-    chmod +x ecr-credential-provider
+RUN git clone https://github.com/kubernetes/cloud-provider-aws.git .
+RUN git checkout tags/$EFFECTIVE_VERSION
+
+RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" GOPROXY=$(GOPROXY) go build \
+    		-trimpath \
+    		-ldflags="$(LDFLAGS)" \
+    		-o=ecr-credential-provider \
+    		cmd/ecr-credential-provider/*.go
 
 ### actual container
 
