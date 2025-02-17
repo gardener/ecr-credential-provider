@@ -3,6 +3,12 @@ ecr-credential-provider:
   base_definition:
     repo:
       disable_ci_skip: True
+      source_labels:
+      - name: cloud.gardener.cnudie/dso/scanning-hints/source_analysis/v1
+        value:
+          policy: skip
+          comment: |
+            There is no source code in this repository to scan.
     traits:
       version: ~
       component_descriptor:
