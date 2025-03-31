@@ -20,6 +20,20 @@ ecr-credential-provider:
             teamname: 'gardener/gardener-extension-provider-aws-maintainers'
             github_hostname: 'github.com'
   jobs:
+    head-update:
+      traits:
+        component_descriptor:
+          ocm_repository: europe-docker.pkg.dev/gardener-project/releases
+        publish:
+          platforms:
+            - 'linux/amd64'
+            - 'linux/arm64'
+          oci-builder: 'docker-buildx'
+          dockerimages:
+            ecr-credential-provider:
+              image: 'europe-docker.pkg.dev/gardener-project/releases/gardener/extensions/ecr-credential-provider'
+              dockerfile: 'Dockerfile'
+              tag_as_latest: False
     release:
       traits:
         component_descriptor:
