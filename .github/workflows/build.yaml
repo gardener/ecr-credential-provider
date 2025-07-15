@@ -1,0 +1,72 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        required: true
+        type: string
+        default: snapshot
+        description: |
+          the mode to use. either `snapshot` or `release`. Will affect effective version, as well
+          as target-oci-registry.
+
+jobs:
+  prepare:
+    uses: gardener/cc-utils/.github/workflows/prepare.yaml@master
+    with:
+      mode: ${{ inputs.mode }}
+      version-commit-callback-action-path:
+    permissions:
+      contents: read
+
+  calculate-version:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    permissions:
+      contents: read
+    steps:
+      - name: calculate-version
+        id: version
+        shell: bash
+        run: |
+          set -eu
+          # effective version is used in `Dockerfile` to specify the branch of an external
+          # git-repository. Hence, for non-release-builds, we cannot use snapshot-version
+          version='${{ needs.prepare.outputs.version }}'
+          if [ '${{ inputs.mode }}' == 'snapshot' ]; then
+            version="$(echo ${version} | cut -d- -f1)"
+          fi
+
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+  oci-images:
+    name: Build OCI-Images
+    needs:
+      - prepare
+      - calculate-version
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    secrets: inherit
+    uses: gardener/cc-utils/.github/workflows/oci-ocm.yaml@master
+    strategy:
+      matrix:
+        args:
+          - name: ecr-credential-provider
+            target:
+            oci-repository: gardener/extensions/ecr-credential-provider
+    with:
+      name: ${{ matrix.args.name }}
+      version: ${{ needs.prepare.outputs.version }}
+      target: ${{ matrix.args.target }}
+      oci-registry: ${{ needs.prepare.outputs.oci-registry }}
+      oci-repository: ${{ matrix.args.oci-repository }}
+      oci-platforms: linux/amd64,linux/arm64
+      extra-tags:
+      build-args: |
+        EFFECTIVE_VERSION=${{ needs.calculate-version.outputs.version }}
