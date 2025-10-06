@@ -1,0 +1,15 @@
+# See the OWNERS docs at https://go.k8s.io/owners
+
+aliases:
+  ecr-credential-provider-reviewers:
+  - AndreasBurger
+  - hebelsan
+  - kon-angelo
+  - matthias-horne
+  - wpross
+  ecr-credential-provider-approvers:
+  - AndreasBurger
+  - hebelsan
+  - kon-angelo
+  - matthias-horne
+  - wpross
