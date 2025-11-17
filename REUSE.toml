@@ -8,9 +8,3 @@ path = "**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2017-2025 SAP SE or an SAP affiliate company and Gardener contributors"
 SPDX-License-Identifier = "Apache-2.0"
-
-[[annotations]]
-path = "**.md"
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2017-2025 SAP SE or an SAP affiliate company and Gardener contributors"
-SPDX-License-Identifier = "CC-BY-4.0"
