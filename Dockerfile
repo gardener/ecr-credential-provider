@@ -1,10 +1,10 @@
 ### binary downloader
 # Arch specific stages are required to set arg appropriately, see https://github.com/docker/buildx/issues/157#issuecomment-538048500
 
-FROM golang:1.24.3 AS builder-amd64
+FROM golang:1.24.12 AS builder-amd64
 ARG ARCH=amd64
 
-FROM golang:1.24.3 AS builder-arm64
+FROM golang:1.24.12 AS builder-arm64
 ARG ARCH=arm64
 
 FROM builder-$TARGETARCH AS builder
