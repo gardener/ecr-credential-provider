@@ -14,9 +14,9 @@ WORKDIR /tmp/ecr-credential-provider
 
 RUN git clone https://github.com/kubernetes/cloud-provider-aws.git -b $EFFECTIVE_VERSION .
 
-RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" GOPROXY=$(GOPROXY) go build \
+RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH="$ARCH" GOPROXY="$GOPROXY" go build \
     		-trimpath \
-    		-ldflags="$(LDFLAGS)" \
+    		-ldflags="$LDFLAGS" \
     		-o=ecr-credential-provider \
     		cmd/ecr-credential-provider/*.go
 
