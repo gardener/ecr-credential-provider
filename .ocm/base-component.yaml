@@ -4,10 +4,3 @@ labels:
     - type: githubTeam
       teamname: gardener/gardener-extension-provider-aws-maintainers
       github_hostname: github.com
-main-source:
-  labels:
-    - name: cloud.gardener.cnudie/dso/scanning-hints/source_analysis/v1
-      value:
-        policy: skip
-        comment: |
-          we use gosec for sast scanning. See attached log.
