@@ -1,0 +1,11 @@
+{
+  "name": "cloud-provider-aws",
+  "version": "v1.37.0",
+  "type": "git",
+  "access": {
+    "type": "github",
+    "repoUrl": "github.com/kubernetes/cloud-provider-aws",
+    "ref": "refs/tags/v1.37.0",
+    "commit": "f01a0ef3c40d6e108e6b4384352c83f37b9502e0"
+  }
+}
