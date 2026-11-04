@@ -13,7 +13,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  guard-ref:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Check release ref
+        shell: bash
+        run: |
+          case "${GITHUB_REF}" in
+            refs/heads/master|refs/heads/release-*) ;;
+            *) echo "ERROR: release must be dispatched from master or a release-* branch, got ${GITHUB_REF}"; exit 1 ;;
+          esac
+
   build:
+    needs: guard-ref
     uses: ./.github/workflows/build.yaml
     secrets: inherit
     permissions:
