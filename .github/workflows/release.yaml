@@ -8,6 +8,9 @@ on:
           - bump-minor
           - bump-patch
 
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   build:
