@@ -92,9 +92,11 @@ class SourceTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'Packaging version must be a stable release'):
                     upstream.validate_release(self.source, 'release', packaging_version)
 
-    def test_rejects_unknown_mode(self):
-        with self.assertRaises(ValueError):
-            upstream.validate_release(self.source, 'other', 'v1.37.0')
+    def test_rejects_missing_empty_or_unknown_mode(self):
+        for mode in (None, '', 'other'):
+            with self.subTest(mode=mode):
+                with self.assertRaisesRegex(ValueError, 'Mode must be snapshot or release'):
+                    upstream.validate_release(self.source, mode, 'v1.37.0')
 
     def test_rejects_invalid_source_fields(self):
         changes = (
